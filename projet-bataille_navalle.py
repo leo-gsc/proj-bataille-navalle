@@ -64,7 +64,7 @@ def placer_bateau(carte, stock, taille, orientation, coordonnee):
 
 
 
-def attaque(carte_averse, coordonnee):
+def attaque(carte_averse, coordonnee, score):
     """permet d'attauqer les bateaux adverses
     Entrées: grille_adverse, la carte de l'adversaire
              coordonnée, le point qui va être attaqué
@@ -72,14 +72,19 @@ def attaque(carte_averse, coordonnee):
     """
     col = int(coordonnee[1:].upper()) - 1  
     ligne = ord(coordonnee[0]) - 65  
-
+    #verif si case déjà attaquée
+    if carte_averse[ligne][col] == " X":
+        print("Cette case a déjà été attaquée!")
     #verif pour savoir si on touche ou non
     if carte_averse[ligne][col] == " O":
+        score += 1
+        if score == 17:
+            print("Gagné!")
         carte_averse[ligne][col] = " X" 
-        return "Touché"
+        print("Touché")
     else:
-        carte_averse[ligne][col] = "  " 
-        return "Coulé"
+        carte_averse[ligne][col] = " X" 
+        print("Raté")
 
     
     
@@ -112,6 +117,8 @@ def create_game():
     """
     tableau_p1 = []
     tableau_p2 = []
+    score_p1 = 0
+    score_p2 = 0
     stock_p1 = stock_initial()
     stock_p2 = stock_initial()
     for i in range(10):  
@@ -129,17 +136,17 @@ def create_game():
 
     affiche_tab(tableau_p1, "P1")
     affiche_tab(tableau_p2, "P2")
-    return tableau_p1, tableau_p2, stock_p1, stock_p2
+    return tableau_p1, tableau_p2, stock_p1, stock_p2, score_p1, score_p2
 
 
 
 
 #test pour la pres
-tableau_p1, tableau_p2, stock_p1, stock_p2 = create_game()
+tableau_p1, tableau_p2, stock_p1, stock_p2, score_p1, score_p2 = create_game()
 #affiche_tab(tableau_p1, "P1")
 #affiche_tab(tableau_p2, "P2")
 
-print(verif_bateau(tableau_p1, 3, True, "A1"))
+#print(verif_bateau(tableau_p1, 3, True, "A1"))
 placer_bateau(tableau_p1, stock_p1, 3, True, "A1")
 #verif_bateau(tableau_p1, 3, True, "A1")
 #affiche_tab(tableau_p1, "P1")
@@ -151,7 +158,7 @@ placer_bateau(tableau_p1, stock_p1, 5, True, "D4")
 #placer_bateau(tableau_p1, stock_p1, 2, True, "B5")
 #placer_bateau(tableau_p1, stock_p1, 5, True, "D8")
 
-affiche_tab(tableau_p1, "P1")
+#affiche_tab(tableau_p1, "P1")
 
 
 #verif_bateau(tableau_p2, 3, True, "A1")
@@ -165,9 +172,10 @@ placer_bateau(tableau_p2, stock_p2, 5, True, "D4")
 #placer_bateau(tableau_p2, stock_p2, 2, True, "B5")
 #placer_bateau(tableau_p2, stock_p2, 5, True, "D8")
 
-affiche_tab(tableau_p2, "P2")
+#affiche_tab(tableau_p2, "P2")
 
-attaque(tableau_p2, "A1")
-attaque(tableau_p1, "E1")
+attaque(tableau_p2, "A1", score_p1)
+attaque(tableau_p1, "E1", score_p2)
+attaque(tableau_p2, "A1", score_p1)
 affiche_tab(tableau_p2, "P2")
 affiche_tab(tableau_p1, "P1")
