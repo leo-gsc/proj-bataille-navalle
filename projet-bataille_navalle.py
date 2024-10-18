@@ -50,10 +50,10 @@ def placer_bateau(carte, stock, taille, orientation, coordonnee):
     ligne = ord(coordonnee[0]) - 65
     #verif du stock
     if stock[taille] <= 0:
-        raise ValueError(f"Il n'y a plus de bateau de taille {taille} à placer.")
+        raise ValueError(f"plus de bateau de {taille} à placer.")
     #cas où le bateau n'est pas plaçable
     if not verif_bateau(carte, taille, orientation, coordonnee):
-        raise ValueError("Impossible de placer le bateau, vérifie la position et l'orientation.")
+        raise ValueError("il doit y avoir un soucis de placement")
     #place le bateau en parcourant le tableau selon la taille
     for i in range(taille):
         if orientation:  
@@ -75,6 +75,7 @@ def attaque(carte_averse, coordonnee, score):
     #verif si case déjà attaquée
     if carte_averse[ligne][col] == " X":
         print("Cette case a déjà été attaquée!")
+        return score
     #verif pour savoir si on touche ou non
     if carte_averse[ligne][col] == " O":
         score += 1
@@ -85,7 +86,7 @@ def attaque(carte_averse, coordonnee, score):
     else:
         carte_averse[ligne][col] = " X" 
         print("Raté")
-
+    return score
     
     
 def affiche_tab(tableau, joueur):
@@ -158,7 +159,7 @@ placer_bateau(tableau_p1, stock_p1, 5, True, "D4")
 #placer_bateau(tableau_p1, stock_p1, 2, True, "B5")
 #placer_bateau(tableau_p1, stock_p1, 5, True, "D8")
 
-#affiche_tab(tableau_p1, "P1")
+affiche_tab(tableau_p1, "P1")
 
 
 #verif_bateau(tableau_p2, 3, True, "A1")
@@ -174,8 +175,28 @@ placer_bateau(tableau_p2, stock_p2, 5, True, "D4")
 
 #affiche_tab(tableau_p2, "P2")
 
-attaque(tableau_p2, "A1", score_p1)
-attaque(tableau_p1, "E1", score_p2)
-attaque(tableau_p2, "A1", score_p1)
-affiche_tab(tableau_p2, "P2")
-affiche_tab(tableau_p1, "P1")
+score_p1 = attaque(tableau_p2, "A1", score_p1)
+score_p2 = attaque(tableau_p1, "E1", score_p2)
+
+score_p1 = attaque(tableau_p2, "A1", score_p1)
+#affiche_tab(tableau_p2, "P2")
+#affiche_tab(tableau_p1, "P1")
+score_p2 = attaque(tableau_p1, "A1", score_p2)
+#score_p2 = attaque(tableau_p1, "B1", score_p2)
+#score_p2 = attaque(tableau_p1, "C1", score_p2)
+#score_p2 = attaque(tableau_p1, "A2", score_p2)
+#score_p2 = attaque(tableau_p1, "A3", score_p2)
+#score_p2 = attaque(tableau_p1, "A6", score_p2)
+#score_p2 = attaque(tableau_p1, "A7", score_p2)
+#score_p2 = attaque(tableau_p1, "A8", score_p2)
+#score_p2 = attaque(tableau_p1, "D4", score_p2)
+#score_p2 = attaque(tableau_p1, "D5", score_p2)
+#score_p2 = attaque(tableau_p1, "D6", score_p2)
+#score_p2 = attaque(tableau_p1, "D7", score_p2)
+#score_p2 = attaque(tableau_p1, "D8", score_p2)
+#score_p2 = attaque(tableau_p1, "E3", score_p2)
+#score_p2 = attaque(tableau_p1, "E4", score_p2)
+#score_p2 = attaque(tableau_p1, "E5", score_p2)
+#attaque(tableau_p1, "E6", score_p2)
+#affiche_tab(tableau_p1, "P2")
+print(score_p2)
