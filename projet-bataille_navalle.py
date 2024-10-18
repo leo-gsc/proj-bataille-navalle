@@ -6,11 +6,11 @@ def stock_initial():
     #initialisation du stock de bateau
     return {2: 1, 3: 2, 4: 1, 5: 1}
 
-def verif_bateau(grille, taille, orientation, coordonnee):
+def verif_bateau(carte, taille, orientation, coordonnee):
     """
     Vérifie si un bateau peut être placé
     Entrée :
-        grille : un tableau de tableau de jeu
+        carte : un tableau de tableau de jeu
         taille : taille du bateau
         orientation : un booleen qui défini l'orientation du bateau
         coordonnee : position de départ pour placer un bateau
@@ -25,22 +25,22 @@ def verif_bateau(grille, taille, orientation, coordonnee):
         if col + taille > 10:
             return False  # Le bateau ne passe pas
         for i in range(taille):
-            if grille[ligne][col + i] != ".":  # Vérif pour placer si case libre
+            if carte[ligne][col + i] != ".":  # Vérif pour placer si case libre
                 return False
     else:  
         if ligne + taille > 10:
             return False  # Le bateau ne passe pas
         for i in range(taille):
-            if grille[ligne + i][col] != ".":  # Vérif pour placer si case libre
+            if carte[ligne + i][col] != ".":  # Vérif pour placer si case libre
                 return False
 
     return True
 
-def placer_bateau(grille, stock, taille, orientation, coordonnee):
+def placer_bateau(carte, stock, taille, orientation, coordonnee):
     """
     Permet de placer un bateau sur la grille.
     Entrée :
-        grille : un tableau de tableau de jeu
+        carte : un tableau de tableau de jeu
         taille : taille du bateau
         orientation : un booleen qui défini l'orientation du bateau
         coordonnee : position de départ pour placer un bateau
@@ -52,16 +52,37 @@ def placer_bateau(grille, stock, taille, orientation, coordonnee):
     if stock[taille] <= 0:
         raise ValueError(f"Il n'y a plus de bateau de taille {taille} à placer.")
     #cas où le bateau n'est pas plaçable
-    if not verif_bateau(grille, taille, orientation, coordonnee):
+    if not verif_bateau(carte, taille, orientation, coordonnee):
         raise ValueError("Impossible de placer le bateau, vérifie la position et l'orientation.")
     #place le bateau en parcourant le tableau selon la taille
     for i in range(taille):
         if orientation:  
-            grille[ligne][col + i] = " O"
+            carte[ligne][col + i] = " O"
         else:  
-            grille[ligne + i][col] = " O"
+            carte[ligne + i][col] = " O"
     stock[taille] -= 1
 
+
+
+def attaque(carte_averse, coordonnee):
+    """permet d'attauqer les bateaux adverses
+    Entrées: grille_adverse, la carte de l'adversaire
+             coordonnée, le point qui va être attaqué
+    Sortie: "Touché" si un bateau est atteint, "coulé" sinon
+    """
+    col = int(coordonnee[1:].upper()) - 1  
+    ligne = ord(coordonnee[0]) - 65  
+
+    #verif pour savoir si on touche ou non
+    if carte_averse[ligne][col] == " O":
+        carte_averse[ligne][col] = " X" 
+        return "Touché"
+    else:
+        carte_averse[ligne][col] = "  " 
+        return "Coulé"
+
+    
+    
 def affiche_tab(tableau, joueur):
     """
     Affiche le tableau d'un joueur.
@@ -121,9 +142,12 @@ tableau_p1, tableau_p2, stock_p1, stock_p2 = create_game()
 print(verif_bateau(tableau_p1, 3, True, "A1"))
 placer_bateau(tableau_p1, stock_p1, 3, True, "A1")
 #verif_bateau(tableau_p1, 3, True, "A1")
-affiche_tab(tableau_p1, "P1")
+#affiche_tab(tableau_p1, "P1")
 #placer_bateau(tableau_p1, stock_p1, 3, True, "A1")
+placer_bateau(tableau_p1, stock_p1, 3, True, "A6")
 placer_bateau(tableau_p1, stock_p1, 2, False, "B1")
+placer_bateau(tableau_p1, stock_p1, 4, True, "E3")
+placer_bateau(tableau_p1, stock_p1, 5, True, "D4")
 #placer_bateau(tableau_p1, stock_p1, 2, True, "B5")
 #placer_bateau(tableau_p1, stock_p1, 5, True, "D8")
 
@@ -135,7 +159,15 @@ placer_bateau(tableau_p2, stock_p2, 3, True, "A1")
 #verif_bateau(tableau_p2, 3, True, "A1")
 #placer_bateau(tableau_p2, stock_p2, 3, True, "A1")
 placer_bateau(tableau_p2, stock_p2, 2, True, "B5")
+placer_bateau(tableau_p2, stock_p2, 3, False, "G6")
+placer_bateau(tableau_p2, stock_p2, 4, True, "E3")
+placer_bateau(tableau_p2, stock_p2, 5, True, "D4")
 #placer_bateau(tableau_p2, stock_p2, 2, True, "B5")
 #placer_bateau(tableau_p2, stock_p2, 5, True, "D8")
 
 affiche_tab(tableau_p2, "P2")
+
+attaque(tableau_p2, "A1")
+attaque(tableau_p1, "E1")
+affiche_tab(tableau_p2, "P2")
+affiche_tab(tableau_p1, "P1")
